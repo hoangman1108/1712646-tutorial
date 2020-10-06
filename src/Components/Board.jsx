@@ -76,8 +76,8 @@ export default class Board extends Component {
 
     return (
       <div >
-        <div className="status">{status}</div>
-        <div >
+        <div className="status" style={{fontSize:'1.5rem'}}>{status}</div>
+        <div className="mt-4">
           {this.renderSquare(0)}
           {this.renderSquare(1)}
           {this.renderSquare(2)}
