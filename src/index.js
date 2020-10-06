@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Board from './Components/Board';
+import Game from './Components/Game';
 import './index.css'
 ReactDOM.render(
   <React.StrictMode>
-    <Board/>
+    <Game/>
   </React.StrictMode>,
   document.getElementById('root')
 );
