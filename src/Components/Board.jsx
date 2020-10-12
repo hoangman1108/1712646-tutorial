@@ -9,9 +9,14 @@ export default class Board extends Component {
 
 
   renderSquare(i) {
+    let ioutline = false;
+    if (this.props.lines[0] === i || this.props.lines[1] === i || this.props.lines[2] === i) {
+      ioutline = true;
+    }
     return (
       <Square
         value={this.props.squares[i]}
+        outline = {ioutline}
         onClick={() => this.props.onClick(i)}
       />
     );
@@ -20,22 +25,17 @@ export default class Board extends Component {
 
   render() {
      return (
-      <div >
-        <div className="mt-4">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div >
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div >
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
+      <div className="mt-4">
+         {(() => {
+          const options = [];
+          for (let i = 0; i < 3; i++) {
+            options.push(<br></br>);
+            for (let k = 0; k < 3; k++) {
+              options.push(this.renderSquare(i*3 + k));
+            }
+          }
+          return options;
+        })()}
       </div>
     );
   }
