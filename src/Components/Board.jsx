@@ -21,8 +21,8 @@ export default class Board extends Component {
       />
     );
   }
-  
 
+ 
   render() {
      return (
       <div className="mt-4">

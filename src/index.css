@@ -20,3 +20,8 @@ ul {
 .oppa {
     opacity: 1 !important;
 }
+
+#btnMove:focus{
+    background: pink ;
+    border: 1px solid white;
+}

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
+// import Sortable from "react-sortable-list";
 import Board from "./Board";
-import Mask from "./Mask";  
 export default class Game extends Component {
   constructor(props) {
     super(props);
@@ -8,11 +8,11 @@ export default class Game extends Component {
       history: [
         {
           squares: Array(9).fill(null),
+          location: [-1,-1]
         },
       ],
       xIsNext: true,
       stepNumber: 0,
-      count: 0,
     };
   }
 
@@ -55,16 +55,15 @@ export default class Game extends Component {
         // })
         // this.setState({
         //     history: history.concat([{ squares: squares}]),
-        // })
+        // }) 0 3 6 = 1/ 1 4 7=2
       return;
     }
     squares[i] = this.state.xIsNext ? "X" : "O";
     // console.log(squares);
     this.setState({
-      history: history.concat([{ squares: squares }]),
+      history: history.concat([{ squares: squares, location: [Math.floor(i/3) + 1, (i%3) + 1] }]),
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
-      count: this.state.count + 1,
     });
   }
 
@@ -73,11 +72,11 @@ export default class Game extends Component {
       history: [
         {
           squares: Array(9).fill(null),
+          location: [-1, -1]
         },
       ],
       xIsNext: true,
       stepNumber: 0,
-      count: 0,
     });
   }
 
@@ -89,21 +88,28 @@ export default class Game extends Component {
   }
 
   render() {
+    let temp = false;
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = this.calculateWinner(current.squares)?.name;
     const lines = this.calculateWinner(current.squares)?.lines ? this.calculateWinner(current.squares).lines : [-1, -1, -1];
-    const moves = history.map((step, move) => {
-      const desc = move ? "Go to move #" + move : "Go to game start";
+    const moves = temp?history.map((step, move) => {
+      const desc = move ? "Go to move #" + (history.length - move) + '(' + history[history.length - move].location[0] + ', ' + history[history.length - move].location[1] + ')' : "Go to game start";
       return (
         <li key={desc} >
-          <button className="btn btn-outline-dark mt-3" onClick={() => this.jumpTo(move)}>{desc}</button>
+          <button id="btnMove" className="btn btn-outline-dark mt-3" onClick={() => this.jumpTo(history.length - move)}>{desc}</button>
+        </li>
+      );
+    }):history.map((step, move) => {
+      const desc = move ? "Go to move #" + (move) + '(' + history[move].location[0] + ', ' + history[move].location[1] + ')' : "Go to game start";
+      return (
+        <li key={desc} >
+          <button id="btnMove" className="btn btn-outline-dark mt-3" onClick={() => this.jumpTo(move)}>{desc}</button>
         </li>
       );
     });
 
     let status;
-    console.log(this.state.count,winner)
     
     if (winner) {
       status = "Winner: " + winner;
@@ -111,7 +117,7 @@ export default class Game extends Component {
       status = "Next player: " + (this.state.xIsNext ? "X" : "O");
     }
 
-    if (this.state.count === 9 && !winner) {
+    if (this.state.history.length - 1 === 9 && !winner) {
         status = "Winner: 2 players are equal";
     }
     return (
