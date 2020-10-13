@@ -13,6 +13,7 @@ export default class Game extends Component {
       ],
       xIsNext: true,
       stepNumber: 0,
+      asc: true,
     };
   }
 
@@ -93,18 +94,18 @@ export default class Game extends Component {
     const current = history[this.state.stepNumber];
     const winner = this.calculateWinner(current.squares)?.name;
     const lines = this.calculateWinner(current.squares)?.lines ? this.calculateWinner(current.squares).lines : [-1, -1, -1];
-    const moves = temp?history.map((step, move) => {
-      const desc = move ? "Go to move #" + (history.length - move) + '(' + history[history.length - move].location[0] + ', ' + history[history.length - move].location[1] + ')' : "Go to game start";
-      return (
-        <li key={desc} >
-          <button id="btnMove" className="btn btn-outline-dark mt-3" onClick={() => this.jumpTo(history.length - move)}>{desc}</button>
-        </li>
-      );
-    }):history.map((step, move) => {
+    const moves = this.state.asc ? history.map((step, move) => {
       const desc = move ? "Go to move #" + (move) + '(' + history[move].location[0] + ', ' + history[move].location[1] + ')' : "Go to game start";
       return (
         <li key={desc} >
           <button id="btnMove" className="btn btn-outline-dark mt-3" onClick={() => this.jumpTo(move)}>{desc}</button>
+        </li>
+      );
+    }): history.map((step, move) => {
+      const desc = history.length - move - 1 ? "Go to move #" + (history.length - move - 1) + '(' + history[history.length - move - 1].location[0] + ', ' + history[history.length - move - 1].location[1] + ')' : "Go to game start";
+      return (
+        <li key={desc} >
+          <button id="btnMove" className="btn btn-outline-dark mt-3" onClick={() => this.jumpTo(history.length - move - 1)}>{desc}</button>
         </li>
       );
     });
@@ -121,10 +122,14 @@ export default class Game extends Component {
         status = "Winner: 2 players are equal";
     }
     return (
-      <div className="game text-center" style={{position: "relative"}}>
+      <div className="game text-center mt-5" style={{position: "relative"}}>
         <div className="row" >
           <div className="col-3" >
+          <button style={{width:130 }} className="btn btn-info ml-5 mt-5"onClick={() => this.setState({
+              asc :!this.state.asc,
+            })}>Sort</button>
             <ul>{moves}</ul>
+            
           </div>
           <div className="col-6">
             <div className="game-board">
@@ -132,7 +137,7 @@ export default class Game extends Component {
                 squares={current.squares}
                 lines = {lines}
                 onClick={(i) => this.handleClick(i)}
-              />
+                />
             </div>
             <div className="game-info mt-5">
             <div className="status" style={{ fontSize: "1.5rem" }}>
